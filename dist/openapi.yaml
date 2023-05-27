@@ -169,11 +169,11 @@ components:
           type: string
           description: user's email
           example: my_name12@gmail.com
-        # image-url:
-        #   pattern: URL
-        #   type: string
-        #   description: URL for the user's image
-        #   example: https://cloudinary.com/
+        profilePic:
+          pattern: URL
+          type: string
+          description: URL for the user's image
+          example: s
       description: Model containing user info
     LoginScheme:
       type: object
