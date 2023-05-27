@@ -68,6 +68,34 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
+  /users/last:
+    get:
+      tags: 
+      - reicpe
+      - users
+      summary: get last 3 recipes for a specific user
+      description: get the last 3 recipes that a user visited in
+      operationId: last3
+      responses:
+        '200':
+          description: successfully show the 3 recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+              
+        '206':
+          description: user have less then 3 last visited recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '400':
+          description: user not found
   /users/favorites:
     get:
       tags:

@@ -9,7 +9,9 @@ async function getFavoriteRecipes(user_id){
     return recipes_id;
 }
 
-
+async function get3LastViewd(user_id){
+    
+}
 
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
