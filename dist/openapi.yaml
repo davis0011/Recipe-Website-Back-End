@@ -161,6 +161,32 @@ paths:
                 $ref: '#/components/schemas/RecipePreview'
         "404":
           description: recipeId is not exists
+  /recipes/rand:
+    get:
+      tags: 
+        - recipe
+      summary: get 3 random recipes
+      description: return 3 random recepice for the home page to view
+      operationId: getRecipeArrayRand
+      responses:
+        '200':
+          description: we got the recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '206':
+          description: user have less then 3 recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Something went wrong
 components:
   schemas:
     User:

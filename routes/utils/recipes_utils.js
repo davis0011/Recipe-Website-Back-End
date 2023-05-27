@@ -38,17 +38,28 @@ async function getRecipeDetails(recipe_id) {
 }
 
 async function getRecipeArrayRand(n) {
-    const result = new Set();
-    while (result.size < n) {
-        result.add(Math.floor(Math.random() * (1000000)) + 1);
+    let set = new Set();
+    console.log(n)
+    while (set.size < n) {
+        set = set.add(Math.floor(Math.random() * (100000)) + 1);
     }
-    return result.map(getRecipeDetails);
-
+    let result = Array.from(set);
+    for (let i = 0; i < result.length; i++) {
+        try{
+            result[i] = await getRecipeDetails(result[i]);
+        }
+        catch{
+            result[i] = Math.floor(Math.random() * (100000)) + 1;
+            i--;
+        }
+      }
+    return Promise.all(result);
 }
 
 
 
 exports.getRecipeDetails = getRecipeDetails;
+exports.getRecipeArrayRand = getRecipeArrayRand;
 
 
 
