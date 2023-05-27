@@ -55,7 +55,7 @@ router.get('/favorites', async (req,res,next) => {
 router.get('/last', async (req,res,next) => {//TODO make it work
   try{
     const user_id = req.session.user_id;
-    let favorite_recipes = {};
+    let recent_recipes = {};
     const recipes_id = await user_utils.get3LastViewd(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
@@ -66,6 +66,39 @@ router.get('/last', async (req,res,next) => {//TODO make it work
   }
 });
 
+router.post("/createRecipe", async (req, res, next) => {
+  try {
+    // parameters exists
+    // valid parameters
+    // username exists
+    let recipe_ditails = {
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      country: req.body.country,
+      password: req.body.password,
+      email: req.body.email,
+      profilePic: req.body.profilePic
+    }
+    let users = [];
+    users = await DButils.execQuery("SELECT username from users");
 
+    if (users.find((x) => x.username === recipe_ditails.username))
+      throw { status: 409, message: "Username taken" };
+
+    // add the new username
+    let hash_password = bcrypt.hashSync(
+      recipe_ditails.password,
+      parseInt(process.env.bcrypt_saltRounds)
+    );
+    await DButils.execQuery(
+      `INSERT INTO users VALUES ('${recipe_ditails.username}', '${recipe_ditails.firstname}', '${recipe_ditails.lastname}',
+      '${recipe_ditails.country}', '${hash_password}', '${recipe_ditails.email}', '${recipe_ditails.profilePic}')`
+    );
+    res.status(201).send({ message: "user created", success: true });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

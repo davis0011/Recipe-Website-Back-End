@@ -137,6 +137,24 @@ paths:
           description: user is not authorized
       security:
       - cookieAuth: []
+  /users/createRecipe:
+    post:
+      tags:
+        - recipe
+      summary: create a new recipe
+      description: A JSON/YAML file contains everything needed for recipe creating
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+        description: recipe to add
+      responses:
+        '201':
+          description: A new recipe has been added
+        '400':
+          description: Wrong input data
   /recipes/{recipeId}:
     get:
       tags:
@@ -255,4 +273,61 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
+    Recipe:
+      type: object
+      properties:
+        image:
+          type: string
+          description: recipe image
+          format: URL
+          example: https://spoonacular.com/recipeimages/655455-566x370.jpg
+        title:
+          type: string
+          description: recipe name
+          example: Simple Macaroni and Cheese
+        readyInMinutes:
+          type: integer
+          description: the time takes to make this recipe
+          example: 45
+        popularity:
+          type: integer
+          description: how many likes got this recipe
+          example: 5987
+        vegetarian:
+          type: boolean
+          description: indication if the recipe is vegetarian
+          example: false
+        vegan:
+          type: boolean
+          description: indication if the recipe is vegan
+          example: false
+        glutenFree:
+          type: boolean
+          description: indication if the recipe is gluten free
+          example: false
+        isClicked:
+          type: boolean
+        Favorite:
+          type: boolean
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              ingredient:
+                type: string
+              amount:
+                type: string
+            required: 
+              - ingredient
+              - amount
+        instructions:
+          type: string
+        servings:
+          type: integer
+        id:
+          type: integer
+        description: 
+          type: string
+          description: the recipe itself
   
