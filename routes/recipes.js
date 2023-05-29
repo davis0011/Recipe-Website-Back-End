@@ -2,6 +2,14 @@ var express = require("express");
 var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
 const DButils = require("./utils/DButils");
+const options = {
+  cuisine: ["African", "Asian", "American", "British", "Cajun", "Caribbean", "Chinese", "Eastern European", "European", 
+  "French", "German", "Greek", "Indian", "Irish", "Italian", "Japanese", "Jewish", "Korean", "Latin American", "Mediterranean", 
+  "Mexican", "Middle Eastern", "Nordic", "Southern", "Spanish", "Thai", "Vietnamese"],
+  diet: ["Gluten Free", "Ketogenic", "Vegetarian", "Lacto-Vegetarian", "Ovo-Vegetarian", "Vegan", "Pescetarian", "Paleo", 
+  "Primal", "Low FODMAP", "Whole30"],
+  intolerance: ["Dairy", "Egg", "Gluten", "Grain", "Peanut", "Seafood", "Sesame", "Shellfish", "Soy", "Sulfite", "Tree Nut", "Wheat"]
+};
 
 router.get("/", (req, res) => res.send("im here"));
 
@@ -52,7 +60,24 @@ router.get("/:recipeId", async (req, res, next) => {
   }
 });
 
-
+router.get("/search", async (req, res, next) => {//TODO work here
+  try {
+    let text = req.header('searchText');
+    let limit = req.header('limit');
+    let cuisine = req.header('cuisine');
+    let diet = req.header('diet');
+    let intolerance = req.header('intolerance');
+    if (options.cuisine.includes(cuisine) && options.diet.includes(diet) && options.intolerance.includes(intolerance)){
+      
+    }
+    else{
+      throw Error("Bad Filters.")
+    }
+    res.send(recipes);
+  } catch (error) {
+    next(error);
+  }
+});
 
 
 module.exports = router;

@@ -205,6 +205,104 @@ paths:
                   $ref: '#/components/schemas/Recipe'
         '400':
           description: Something went wrong
+  /searchRecipe:
+    get:
+      summary: Perform a search
+      parameters:
+        - in: header
+          name: searchText
+          schema:
+            type: string
+          description: The search string that will be used
+          example: Simple potatoes in the oven
+        - in: header
+          name: limit
+          schema:
+            type: number
+            description: "Integer. 5(default), 10, or 15. Used to specify the desired number of recipes."
+            example: 10
+            enum:
+              - 5
+              - 10
+              - 15
+        - in: header
+          name: cuisine
+          schema:
+            type: string
+            description: Enum to filter to a specific cuisine or not (default is none).
+            example: none
+            enum:
+            - none
+            - African
+            - Asian
+            - American
+            - British
+            - Cajun
+            - Caribbean
+            - Chinese
+            - Eastern European
+            - European
+            - French
+            - German
+            - Greek
+            - Indian
+            - Irish
+            - Italian
+            - Japanese
+            - Jewish
+            - Korean
+            - Latin American
+            - Mediterranean
+            - Mexican
+            - Middle Eastern
+            - Nordic
+            - Southern
+            - Spanish
+            - Thai
+            - Vietnamese
+        - in: header
+          name: diet
+          schema:
+            type: string
+            description: Text to filter by dietary restrictions or not (default is none).
+            example: none
+            enum:
+            - none
+            - Gluten Free
+            - Ketogenic
+            - Vegetarian
+            - Lacto-Vegetarian
+            - Ovo-Vegetarian
+            - Vegan
+            - Pescetarian
+            - Paleo
+            - Primal
+            - Low FODMAP
+            - Whole30
+        - in: header
+          name: intolerance
+          schema:
+            type: string
+            description: Text to filter by food intolerance or not (default is none).
+            example: none
+          enum:
+            - Dairy
+            - Egg
+            - Gluten
+            - Grain
+            - Peanut
+            - Seafood
+            - Sesame
+            - Shellfish
+            - Soy
+            - Sulfite
+            - Tree Nut
+            - Wheat            
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
 components:
   schemas:
     User:
