@@ -20,7 +20,17 @@ router.post("/Register", async (req, res, next) => {
     }
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
-
+    let id = await DButils.execQuery("SELECT max(user_id) from users");
+    try{
+      id = id[0]['max(user_id)'] + 1;
+    }
+    catch(err){
+      id = 1;
+    }
+    if (typeof id != 'number' || !Number.isInteger(id) || id <= 0) {
+      id = 1
+    }
+    console.log(id);
     if (users.find((x) => x.username === user_details.username))
       throw { status: 409, message: "Username taken" };
 
@@ -31,7 +41,7 @@ router.post("/Register", async (req, res, next) => {
     );
     await DButils.execQuery(
       `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}', '${user_details.profilePic}')`
+      '${user_details.country}', '${hash_password}', '${user_details.email}', '${user_details.profilePic}', '${id}',NULL,NULL,NULL)`
     );
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
