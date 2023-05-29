@@ -67,7 +67,7 @@ router.get('/last', async (req,res,next) => {//TODO make it work
   }
 });
 
-router.post("/createRecipe", async (req, res, next) => {
+router.post("/createRecipe", async (req, res, next) => {//TODO Make it create recipe
   try {
     // parameters exists
     // valid parameters
