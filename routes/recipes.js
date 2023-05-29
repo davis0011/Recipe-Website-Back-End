@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
+const DButils = require("./utils/DButils");
 
 router.get("/", (req, res) => res.send("im here"));
 
@@ -26,8 +27,19 @@ router.get("/rand", async (req, res, next) => {
  */
 router.get("/:recipeId", async (req, res, next) => {
   try {
+    const user_id = req.session;//session is currently an empty object.
+    // if(user_id != undefined && user_id != null){
+    //   console.log(user_id);
+    //   last2 = await DButils.execQuery(`select last1 from users where user_id='${user_id}'`);
+    //   last3 = await DButils.execQuery(`select last2 from users where user_id='${user_id}'`);
+    //   await DButils.execQuery(`update users set 'last1' = '${req.params.recipeId}' where user_id='${user_id}'`);
+    //   await DButils.execQuery(`update users set 'last2' = '${last2}' where user_id='${user_id}'`);
+    //   await DButils.execQuery(`update users set 'last3' = '${last3}' where user_id='${user_id}'`);
+    // }
+    console.log(user_id);
     const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
     res.send(recipe);
+    // res.send({user: user_id});
   } catch (error) {
     next(error);
   }
