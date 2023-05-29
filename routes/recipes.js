@@ -29,14 +29,21 @@ router.get("/:recipeId", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;//session is currently an empty object.
     if(user_id != undefined && user_id != null){
-      console.log(user_id);
-      last2 = await DButils.execQuery(`select last1 from users where user_id='${user_id}'`);
-      last3 = await DButils.execQuery(`select last2 from users where user_id='${user_id}'`);
-      await DButils.execQuery(`UPDATE users SET 'last1' = '${req.params.recipeId}' WHERE (user_id = '${user_id}')`);
-      await DButils.execQuery(`update users set 'last2' = '${last2}' where (user_id='${user_id}')`);
-      await DButils.execQuery(`update users set 'last3' = '${last3}' where (user_id='${user_id}')`);
+      last1 = req.params.recipeId;
+      last2 = (await DButils.execQuery(`select last1 from users where user_id='${user_id}'`))[0]['last1'];
+      last3 = (await DButils.execQuery(`select last2 from users where user_id='${user_id}'`))[0]['last2'];
+      if(last1 != last2 && last1 != last3){
+        await DButils.execQuery(`UPDATE users SET last1 = '${last1}' WHERE user_id='${user_id}'`);
+        await DButils.execQuery(`update users set last2 = '${last2}' where (user_id='${user_id}')`);
+        await DButils.execQuery(`update users set last3 = '${last3}' where (user_id='${user_id}')`);
+      }
+      else{
+        if(last1 == last3){
+          await DButils.execQuery(`UPDATE users SET last1 = '${last1}' WHERE user_id='${user_id}'`);
+          await DButils.execQuery(`update users set last2 = '${last2}' where (user_id='${user_id}')`);
+        }
+      }
     }
-    console.log(user_id);
     const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
     res.send(recipe);
     // res.send({user: user_id});
