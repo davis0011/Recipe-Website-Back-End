@@ -55,18 +55,33 @@ router.get("/:recipeId", async (req, res, next) => {
 
 router.get("/search", async (req, res, next) => {//TODO work here
   try {
-    let text = req.header('searchText');
-    let limit = req.header('limit');
-    let cuisine = req.header('cuisine');
-    let diet = req.header('diet');
-    let intolerance = req.header('intolerance');
-    if (options.cuisine.includes(cuisine) && options.diet.includes(diet) && options.intolerance.includes(intolerance)){
-      
+    const text = req.header('searchText').trim();
+    const limit = req.header('limit');
+    const cuisines = req.header('cuisine');
+    const diets = req.header('diet');
+    const intolerances = req.header('intolerance');
+
+    // input validation on the filters
+    const ValidText = text.length != 0;
+    const ValidLimit = [5,10,15].includes(limit);
+    const ValidCuisine = cuisines.every((cuisine) => options.cuisine.includes(cuisine));
+    const ValidDiet = diets.every((dietOption) => options.diet.includes(dietOption));
+    const ValidIntolerance = intolerances.every((intoleranceOption) => options.intolerance.includes(intoleranceOption));
+    
+    if (ValidCuisine && ValidDiet && ValidIntolerance && ValidLimit && ValidText){
+      const params = {
+        query: text,
+        number: limit,
+        cuisine: cuisines,
+        diet: diets,
+        intolerances: intolerances
+      };
+      const results = await recipes_utils.getSearchResults(params);
+      res.send(results);
     }
-    else{
-      throw Error("Bad Filters.")
+    else {
+      throw Error("Invalid Request.")
     }
-    res.send(recipes);
   } catch (error) {
     next(error);
   }

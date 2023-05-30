@@ -56,8 +56,13 @@ async function getRecipeArrayRand(n) {
     return Promise.all(result);
 }
 
+async function getSearchResults(params){
+    params.apiKey = process.env.spooncular_apiKey;
+    return await axios.get(`${api_domain}/recipes/complexSearch`, { params });
+}
 
 
+exports.getSearchResults = getSearchResults;
 exports.getRecipeDetails = getRecipeDetails;
 exports.getRecipeArrayRand = getRecipeArrayRand;
 
