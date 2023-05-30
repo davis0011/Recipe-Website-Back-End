@@ -224,106 +224,110 @@ paths:
                   $ref: '#/components/schemas/RecipePreview'
         '400':
           description: user not found
-  /recipes/searchRecipe:
-    get:
-      tags:
+/recipes/searchRecipe:
+  get:
+    tags:
       - recipe
-      summary: Perform a search
-      parameters:
-        - in: header
-          name: searchText
-          schema:
-            type: string
-          description: The search string that will be used
-          example: Simple potatoes in the oven
-        - in: header
-          name: limit
-          schema:
-            type: number
-            description: "Integer. 5(default), 10, or 15. Used to specify the desired number of recipes."
-            example: 10
-            enum:
-              - 5
-              - 10
-              - 15
-        - in: header
-          name: cuisine
-          schema:
-            type: string
-            description: Enum to filter to a specific cuisine or not (default is none).
-            example: none
-            enum:
-            - none
-            - African
-            - Asian
-            - American
-            - British
-            - Cajun
-            - Caribbean
-            - Chinese
-            - Eastern European
-            - European
-            - French
-            - German
-            - Greek
-            - Indian
-            - Irish
-            - Italian
-            - Japanese
-            - Jewish
-            - Korean
-            - Latin American
-            - Mediterranean
-            - Mexican
-            - Middle Eastern
-            - Nordic
-            - Southern
-            - Spanish
-            - Thai
-            - Vietnamese
-        - in: header
-          name: diet
-          schema:
-            type: string
-            description: Text to filter by dietary restrictions or not (default is none).
-            example: none
-            enum:
-            - none
-            - Gluten Free
-            - Ketogenic
-            - Vegetarian
-            - Lacto-Vegetarian
-            - Ovo-Vegetarian
-            - Vegan
-            - Pescetarian
-            - Paleo
-            - Primal
-            - Low FODMAP
-            - Whole30
-        - in: header
-          name: intolerance
-          schema:
-            type: string
-            description: Text to filter by food intolerance or not (default is none).
-            example: none
+    summary: Perform a search
+    parameters:
+      - in: header
+        name: searchText
+        schema:
+          type: string
+        description: The search string that will be used
+        example: Simple potatoes in the oven
+      - in: header
+        name: limit
+        schema:
+          type: number
+          description: "Integer. 5(default), 10, or 15. Used to specify the desired number of recipes."
+          example: 10
           enum:
-            - Dairy
-            - Egg
-            - Gluten
-            - Grain
-            - Peanut
-            - Seafood
-            - Sesame
-            - Shellfish
-            - Soy
-            - Sulfite
-            - Tree Nut
-            - Wheat            
-      responses:
-        '200':
-          description: Success
-        '400':
-          description: Bad Request
+            - 5
+            - 10
+            - 15
+      - in: header
+        name: cuisines
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - African
+              - Asian
+              - American
+              - British
+              - Cajun
+              - Caribbean
+              - Chinese
+              - Eastern European
+              - European
+              - French
+              - German
+              - Greek
+              - Indian
+              - Irish
+              - Italian
+              - Japanese
+              - Jewish
+              - Korean
+              - Latin American
+              - Mediterranean
+              - Mexican
+              - Middle Eastern
+              - Nordic
+              - Southern
+              - Spanish
+              - Thai
+              - Vietnamese
+        description: Enum to filter to specific cuisines or none (empty means none).
+        example: [Indian, Italian]
+      - in: header
+        name: diets
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - Gluten Free
+              - Ketogenic
+              - Vegetarian
+              - Lacto-Vegetarian
+              - Ovo-Vegetarian
+              - Vegan
+              - Pescetarian
+              - Paleo
+              - Primal
+              - Low FODMAP
+              - Whole30
+        description: Text to filter by dietary restrictions or none (empty means none).
+        example: [Gluten Free, Vegan]
+      - in: header
+        name: intolerances
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - Dairy
+              - Egg
+              - Gluten
+              - Grain
+              - Peanut
+              - Seafood
+              - Sesame
+              - Shellfish
+              - Soy
+              - Sulfite
+              - Tree Nut
+              - Wheat
+        description: Text to filter by food intolerance or none (empty means none).
+        example: [Dairy, Gluten]
+    responses:
+      '200':
+        description: Success
+      '400':
+        description: Bad Request
 components:
   schemas:
     User:

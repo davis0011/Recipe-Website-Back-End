@@ -32,35 +32,30 @@ router.get("/rand", async (req, res, next) => {
 
 router.get("/searchRecipe", async (req, res, next) => {//TODO work here
   try {
-    const text = req.header('searchText').trim();
-    const limit = req.header('limit');
-    const cuisines = req.header('cuisine');
-    const diets = req.header('diet');
-    const intolerances = req.header('intolerance');
+      const params = {
+      query: req.header('searchText').trim(),
+      number: req.header('limit'),
+      cuisines: req.header('cuisine'),
+      diets: req.header('diet'),
+      intolerances: req.header('intolerance')
+    };
 
     // Convert single values to arrays if they are provided as strings
     
-    for (let header of [cuisine, diet, intolerance]) {
+    for (let header of [params.cuisine, params.diet, params.intolerance]) {
       if (typeof header === 'string') {
-        header = [header];
+        params[header] = [header];
       }
     }
 
     // input validation on the filters
-    const ValidText = text.length != 0;
-    const ValidLimit = [5,10,15].includes(limit);
-    const ValidCuisine = cuisines.every((cuisine) => options.cuisine.includes(cuisine));
-    const ValidDiet = diets.every((dietOption) => options.diet.includes(dietOption));
-    const ValidIntolerance = intolerances.every((intoleranceOption) => options.intolerance.includes(intoleranceOption));
+    const ValidText = params.query.length != 0;
+    const ValidNumber = [5,10,15].includes(params.number);
+    const ValidCuisines = params.cuisines.every((cuisine) => options.cuisine.includes(cuisine));
+    const ValidDiets = params.diets.every((diet) => options.diet.includes(diet));
+    const ValidIntolerances = params.intolerances.every((intolerance) => options.intolerance.includes(intolerance));
     
-    if (ValidCuisine && ValidDiet && ValidIntolerance && ValidLimit && ValidText){
-      const params = {
-        query: text,
-        number: limit,
-        cuisine: cuisines,
-        diet: diets,
-        intolerances: intolerances
-      };
+    if (ValidCuisines && ValidDiets && ValidIntolerances && ValidNumber && ValidText){
       const results = await recipes_utils.getSearchResults(params);
       res.send(results);
     }
