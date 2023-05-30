@@ -224,8 +224,10 @@ paths:
                   $ref: '#/components/schemas/RecipePreview'
         '400':
           description: user not found
-  /searchRecipe:
+  /recipes/searchRecipe:
     get:
+      tags:
+      - recipe
       summary: Perform a search
       parameters:
         - in: header
