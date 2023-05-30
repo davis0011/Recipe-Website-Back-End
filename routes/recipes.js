@@ -38,6 +38,14 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
     const diets = req.header('diet');
     const intolerances = req.header('intolerance');
 
+    // Convert single values to arrays if they are provided as strings
+    
+    for (let header of [cuisine, diet, intolerance]) {
+      if (typeof header === 'string') {
+        header = [header];
+      }
+    }
+
     // input validation on the filters
     const ValidText = text.length != 0;
     const ValidLimit = [5,10,15].includes(limit);
