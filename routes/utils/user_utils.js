@@ -17,9 +17,10 @@ async function get3LastViewd(user_id){
     return recipes_id;
 }
 async function getOwnRecipes(user_id){
-    const recipes_id = await DButils.execQuery(`select recipe_id from recipes where user_id='${user_id}'`);
-    return recipes_id;
+    const titles = await DButils.execQuery(`select title from recipes where user_id='${user_id}'`);
+    return titles;
 }
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.get3LastViewd = get3LastViewd;
+exports.getOwnRecipes = getOwnRecipes;
