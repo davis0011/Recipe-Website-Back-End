@@ -60,14 +60,14 @@ router.get('/last', async (req,res,next) => {//TODO make it work
     const recipes_id = await user_utils.get3LastViewd(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
-    res.status(200).send(results);
+    // const results = await recipe_utils.getRecipeDetails(recipes_id_array);
+    res.status(200).send(recipes_id);
   } catch(error){
     next(error); 
   }
 });
 
-router.post("/createRecipe", async (req, res, next) => {
+router.post("/createRecipe", async (req, res, next) => {//TODO Make it create recipe
   try {
     // parameters exists
     // valid parameters

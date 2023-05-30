@@ -398,60 +398,31 @@ components:
           description: indication if the recipe is gluten free
           example: false
     Recipe:
-      type: object
-      properties:
-        image:
-          type: string
-          description: recipe image
-          format: URL
-          example: https://spoonacular.com/recipeimages/655455-566x370.jpg
-        title:
-          type: string
-          description: recipe name
-          example: Simple Macaroni and Cheese
-        readyInMinutes:
-          type: integer
-          description: the time takes to make this recipe
-          example: 45
-        popularity:
-          type: integer
-          description: how many likes got this recipe
-          example: 5987
-        vegetarian:
-          type: boolean
-          description: indication if the recipe is vegetarian
-          example: false
-        vegan:
-          type: boolean
-          description: indication if the recipe is vegan
-          example: false
-        glutenFree:
-          type: boolean
-          description: indication if the recipe is gluten free
-          example: false
-        isClicked:
-          type: boolean
-        Favorite:
-          type: boolean
-        ingredients:
-          type: array
-          items:
-            type: object
-            properties:
-              ingredient:
-                type: string
-              amount:
-                type: string
-            required: 
-              - ingredient
-              - amount
-        instructions:
-          type: string
-        servings:
-          type: integer
-        id:
-          type: integer
-        description: 
-          type: string
-          description: the recipe itself
+      allOf:
+        - $ref: '#/components/schemas/RecipePreview'
+        - type: object
+          properties:
+            isClicked:
+              type: boolean
+            Favorite:
+              type: boolean
+            ingredients:
+              type: array
+              items:
+                type: object
+                properties:
+                  ingredient:
+                    type: string
+                  amount:
+                    type: string
+                required: 
+                  - ingredient
+                  - amount
+            instructions:
+              type: string
+            servings:
+              type: integer
+            description: 
+              type: string
+              description: the recipe itself
   
