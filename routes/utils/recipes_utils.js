@@ -66,8 +66,13 @@ async function getSearchResults(params){
           delete params[key];
         }
       }
-    params.apiKey = process.env.spooncular_apiKey;
-    return await axios.get(`${api_domain}/complexSearch`, { params });
+    // params.apiKey = process.env.spooncular_apiKey;
+    headers = {
+        Accept: 'application/json, text/plain, */*',
+        'User-Agent': 'axios/0.19.2',
+        'x-api-key': process.env.spooncular_apiKey
+      }
+    return await axios.get(`${api_domain}/complexSearch`,  JSON.stringify(params) , {headers});
 }
 
 
