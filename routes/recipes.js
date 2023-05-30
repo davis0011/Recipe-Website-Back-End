@@ -30,6 +30,34 @@ router.get("/rand", async (req, res, next) => {
 });
 
 
+/**
+ * This path returns a list of up to the requested amount of recipes that the spoonacular API finds relevant to the query and that 
+ * fits the constraints passed in the headers.
+ * 
+ * 
+ *[  
+    {
+      id: 646870,
+      title: 'Home Made Dry-Aged Sirloin Steak with Cheesy Roast Fingerling Potatoes',
+      readyInMinutes: 45,
+      image: 'https://spoonacular.com/recipeImages/646870-312x231.jpg',
+      aggregateLikes: 1,
+      vegan: false,
+      vegetarian: false,
+      glutenFree: true
+    },
+    {
+      id: 660133,
+      title: 'Simple Roast Chicken',
+      readyInMinutes: 45,
+      image: 'https://spoonacular.com/recipeImages/660133-312x231.jpg',
+      aggregateLikes: 2,
+      vegan: false,
+      vegetarian: false,
+      glutenFree: true
+    }
+  ]
+ */
 router.get("/searchRecipe", async (req, res, next) => {//TODO work here
   try {
       const params = {
@@ -41,7 +69,6 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
       diets: req.header('diets') !== "" ? req.header('diets').split(',') : [],
       intolerances: req.header('intolerances') !== "" ? req.header('intolerances').split(',') : []
     };
-    console.log(params)
     
     
 
@@ -54,7 +81,8 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
     
     if (ValidCuisines && ValidDiets && ValidIntolerances && ValidNumber && ValidText){
       const results = await recipes_utils.getSearchResults(params);
-      res.send(results);
+      console.log(results)
+      res.send({results: results});
     }
     else {
       throw Error("Invalid Request.")

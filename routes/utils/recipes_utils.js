@@ -6,6 +6,7 @@ const api_domain = "https://api.spoonacular.com/recipes";
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
  * @param {*} recipes_info 
+ * 
  */
 
 
@@ -56,18 +57,46 @@ async function getRecipeArrayRand(n) {
     return Promise.all(result);
 }
 
-async function getSearchResults(params){
-    params.cuisines = params.cuisines.join(",");
-    params.diets = params.diets.join(",");
-    params.intolerances = params.intolerances.join(",");
+async function getSearchResults(params_data){
+    params_data.cuisines = params_data.cuisines.join(",");
+    params_data.diets = params_data.diets.join(",");
+    params_data.intolerances = params_data.intolerances.join(",");
+ 
+    // let headers = "?query="+params_data.query+"&number="+params_data.number;
+    // let c = params_data.cuisines !== "" ? "&cuisines="+params_data.cuisines : ""
+    // let d = params_data.diets !== "" ? "&diets="+params_data.diets : ""
+    // let i = params_data.intolerances !== "" ? "&intolerances="+params_data.intolerances : ""
+    // headers = headers + c + d + i + "&apiKey=" + process.env.spooncular_apiKey
+    let response = await axios.get(`${api_domain}/complexSearch`,
+        {   
+            params:
+            {
+                query:String(params_data.query), 
+                number:Number(params_data.number), 
+                cuisine:params_data.cuisines, 
+                diet:params_data.diets,
+                intolerances:params_data.intolerances, 
+                apiKey:process.env.spooncular_apiKey,
+                addRecipeInformation: true
+            }
+        }
+    );
+    results = response.data["results"]
+    for (let i = 0; i < results.length; i++) {
+        let curr = results[i];
+        results[i] = {
+            id:curr.id, 
+            title:curr.title, 
+            readyInMinutes:curr.readyInMinutes, 
+            image:curr.image, 
+            aggregateLikes:curr.aggregateLikes, 
+            vegan:curr.vegan, 
+            vegetarian:curr.vegetarian, 
+            glutenFree:curr.glutenFree 
+        };
+      }
+    return results;
 
-    let headers = "?query="+params.query+"&number="+params.number;
-    let c = prams.cuisines !== "" ? "&cuisines="+params.cuisines : ""
-    let d = prams.diets !== "" ? "&diets="+params.diets : ""
-    let i = prams.intolerances !== "" ? "&intolerances="+params.intolerances : ""
-    headers = headers + c + d + i + "&apiKey=" + process.env.spooncular_apiKey
-
-    return await axios.get(`${api_domain}/complexSearch` + headers);
 }
 
 
