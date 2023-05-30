@@ -35,18 +35,15 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
       const params = {
       query: req.header('searchText').trim(),
       number: req.header('limit'),
-      cuisines: req.header('cuisine'),
-      diets: req.header('diet'),
-      intolerances: req.header('intolerance')
+      
+      // Convert single values to arrays if they are provided as strings
+      cuisines: req.header('cuisine') !== "" ? req.header('cuisine').split(',') : [],
+      diets: req.header('diet') !== "" ? req.header('diet').split(',') : [],
+      intolerances: req.header('intolerance') !== "" ? req.header('intolerance').split(',') : []
     };
 
-    // Convert single values to arrays if they are provided as strings
     
-    for (let header of [params.cuisine, params.diet, params.intolerance]) {
-      if (typeof header === 'string') {
-        params[header] = [header];
-      }
-    }
+    
 
     // input validation on the filters
     const ValidText = params.query.length != 0;
