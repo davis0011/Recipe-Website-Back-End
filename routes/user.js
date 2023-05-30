@@ -67,36 +67,61 @@ router.get('/last', async (req,res,next) => {//TODO make it work
   }
 });
 
+router.get('/own', async (req,res,next) => {//TODO make it work
+  try{
+    const user_id = req.session.user_id;
+    if(user_id != undefined && user_id != null){
+    let own_recipes = {};
+    const recipes_id = await user_utils.getOwnRecipes(user_id);
+    let recipes_id_array = [];
+    recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
+    // const results = await recipe_utils.getRecipeDetails(recipes_id_array);
+    res.status(200).send(recipes_id);
+    }
+  } catch(error){
+    next(error); 
+  }
+});
 router.post("/createRecipe", async (req, res, next) => {//TODO Make it create recipe
   try {
-    // parameters exists
-    // valid parameters
-    // username exists
-    let recipe_ditails = {
-      username: req.body.username,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      country: req.body.country,
-      password: req.body.password,
-      email: req.body.email,
-      profilePic: req.body.profilePic
+    const user_id = req.session.user_id;//session is currently an empty object.
+    if(user_id != undefined && user_id != null){
+    let id = await DButils.execQuery("SELECT max(recipe_id) from recipes");
+    try{
+      id = id[0]['max(recipe_id)'] + 1;
     }
-    let users = [];
-    users = await DButils.execQuery("SELECT username from users");
+    catch(err){
+      id = 1;
+    }
+    if (typeof id != 'number' || !Number.isInteger(id) || id <= 0) {
+      id = 1
+    }
+    let recipe_ditails = {
+      title: req.body.title,
+      image: req.body.image,
+      readyInMinutes: req.body.readyInMinutes,
+      vegetarian: req.body.vegetarian,
+      vegan: req.body.vegan,
+      glutenFree: req.body.glutenFree,
+      ingredients: req.body.ingredients,
+      instructions: req.body.instructions,
+      servings: req.body.servings,
+      description: req.body.description
+    }
+    let recipes = [];
+    recipes = await DButils.execQuery("SELECT title from recipes");
 
-    if (users.find((x) => x.username === recipe_ditails.username))
-      throw { status: 409, message: "Username taken" };
+    if (recipes.find((x) => x.title === recipe_ditails.title))
+      throw { status: 409, message: "recipe title is already in" };
 
-    // add the new username
-    let hash_password = bcrypt.hashSync(
-      recipe_ditails.password,
-      parseInt(process.env.bcrypt_saltRounds)
-    );
+    // add the new recipe
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${recipe_ditails.username}', '${recipe_ditails.firstname}', '${recipe_ditails.lastname}',
-      '${recipe_ditails.country}', '${hash_password}', '${recipe_ditails.email}', '${recipe_ditails.profilePic}')`
+      `INSERT INTO recipes VALUES ('${id}','${user_id}','${recipe_ditails.title}', '${recipe_ditails.image}', '${recipe_ditails.readyInMinutes}',
+      '0',${recipe_ditails.vegetarian}, ${recipe_ditails.vegan}, ${recipe_ditails.glutenFree},False,False, '${JSON.stringify(recipe_ditails.ingredients)}',
+      '${recipe_ditails.instructions}', '${recipe_ditails.servings}', '${recipe_ditails.description}')`
     );
-    res.status(201).send({ message: "user created", success: true });
+    res.status(201).send({ message: "recipe created", success: true });
+    }
   } catch (error) {
     next(error);
   }

@@ -30,7 +30,6 @@ router.post("/Register", async (req, res, next) => {
     if (typeof id != 'number' || !Number.isInteger(id) || id <= 0) {
       id = 1
     }
-    console.log(id);
     if (users.find((x) => x.username === user_details.username))
       throw { status: 409, message: "Username taken" };
 

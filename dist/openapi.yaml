@@ -205,6 +205,25 @@ paths:
                   $ref: '#/components/schemas/Recipe'
         '400':
           description: Something went wrong
+  /users/own:
+    get:
+      tags: 
+      - reicpe
+      - users
+      summary: get user's self created recipes
+      description: get the recipes that the user created
+      operationId: own
+      responses:
+        '200':
+          description: successfully showed the favorite recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipePreview'
+        '400':
+          description: user not found
   /searchRecipe:
     get:
       summary: Perform a search
