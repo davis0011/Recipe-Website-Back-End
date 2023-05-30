@@ -57,8 +57,17 @@ async function getRecipeArrayRand(n) {
 }
 
 async function getSearchResults(params){
+    params.cuisines = params.cuisines.join(",");
+    params.diets = params.diets.join(",");
+    params.intolerances = params.intolerances.join(",");
+    for (var key in params) {
+        if (params.hasOwnProperty(key) && params[key] === '') {
+          // Remove fields with empty string values
+          delete params[key];
+        }
+      }
     params.apiKey = process.env.spooncular_apiKey;
-    return await axios.get(`${api_domain}/recipes/complexSearch`, { params });
+    return await axios.get(`${api_domain}/complexSearch`, { params });
 }
 
 

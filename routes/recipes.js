@@ -34,14 +34,14 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
   try {
       const params = {
       query: req.header('searchText').trim(),
-      number: req.header('limit'),
+      number: Number(req.header('limit')),
       
       // Convert single values to arrays if they are provided as strings
-      cuisines: req.header('cuisine') !== "" ? req.header('cuisine').split(',') : [],
-      diets: req.header('diet') !== "" ? req.header('diet').split(',') : [],
-      intolerances: req.header('intolerance') !== "" ? req.header('intolerance').split(',') : []
+      cuisines: req.header('cuisines') !== "" ? req.header('cuisines').split(',') : [],
+      diets: req.header('diets') !== "" ? req.header('diets').split(',') : [],
+      intolerances: req.header('intolerances') !== "" ? req.header('intolerances').split(',') : []
     };
-
+    console.log(params)
     
     
 
