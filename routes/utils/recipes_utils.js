@@ -60,19 +60,14 @@ async function getSearchResults(params){
     params.cuisines = params.cuisines.join(",");
     params.diets = params.diets.join(",");
     params.intolerances = params.intolerances.join(",");
-    for (var key in params) {
-        if (params.hasOwnProperty(key) && params[key] === '') {
-          // Remove fields with empty string values
-          delete params[key];
-        }
-      }
-    // params.apiKey = process.env.spooncular_apiKey;
-    headers = {
-        Accept: 'application/json, text/plain, */*',
-        'User-Agent': 'axios/0.19.2',
-        'x-api-key': process.env.spooncular_apiKey
-      }
-    return await axios.get(`${api_domain}/complexSearch`,  JSON.stringify(params) , {headers});
+
+    let headers = "?query="+params.query+"&number="+params.number;
+    let c = prams.cuisines !== "" ? "&cuisines="+params.cuisines : ""
+    let d = prams.diets !== "" ? "&diets="+params.diets : ""
+    let i = prams.intolerances !== "" ? "&intolerances="+params.intolerances : ""
+    headers = headers + c + d + i + "&apiKey=" + process.env.spooncular_apiKey
+
+    return await axios.get(`${api_domain}/complexSearch` + headers);
 }
 
 
