@@ -1,6 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-
+const DButils = require("./DButils");
 
 
 /**
@@ -19,9 +19,31 @@ async function getRecipeInformation(recipe_id) {
     });
 }
 
-
-
 async function getRecipeDetails(recipe_id) {
+    let recipe_info = await getRecipeInformation(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+
+    return {
+        id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        
+    }
+}
+
+async function getRecipesPreview(recipe_ids) {
+    var res = []
+    for (let i = 0; i < recipe_ids.length; i++) {
+        let recipe = await DButils.execQuery(`SELECT recipe_id,image,title,readyInMinutes,popularity,vegetarian,vegan,glutenFree,isClicked,favorite from recipes WHERE recipe_id='${recipe_ids[i]}'`);
+        res.push(recipe)
+      }
+    console.log(res);
+    return res;
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
 
@@ -103,6 +125,6 @@ async function getSearchResults(params_data){
 exports.getSearchResults = getSearchResults;
 exports.getRecipeDetails = getRecipeDetails;
 exports.getRecipeArrayRand = getRecipeArrayRand;
-
+exports.getRecipesPreview = getRecipesPreview;
 
 

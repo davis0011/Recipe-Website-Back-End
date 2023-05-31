@@ -60,7 +60,7 @@ router.get('/last', async (req,res,next) => {//TODO make it work
     const recipes_id = await user_utils.get3LastViewd(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    // const results = await recipe_utils.getRecipeDetails(recipes_id_array);
+    const results = await recipe_utils.getRecipeDetails(recipes_id_array);
     res.status(200).send(recipes_id);
   } catch(error){
     next(error); 
@@ -75,7 +75,7 @@ router.get('/own', async (req,res,next) => {//TODO make it work
     const titles = await user_utils.getOwnRecipes(user_id);
     let recipes_titles_array = [];
     titles.map((element) => recipes_titles_array.push(element.title)); //extracting the recipe ids into array
-    // const results = await recipe_utils.getRecipeDetails(recipes_id_array);
+    const results = await recipe_utils.getRecipeDetails(recipes_id_array);
     res.status(200).send(titles);
     }
   } catch(error){
