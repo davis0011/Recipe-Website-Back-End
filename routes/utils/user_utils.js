@@ -10,15 +10,16 @@ async function getFavoriteRecipes(user_id){
 }
 
 async function get3LastViewd(user_id){
-    const recipes_id = await DButils.execQuery(`select last1,last2,last3 from users where user_id='${user_id}'`);
-    // const recipes_id2 = await DButils.execQuery(`select last2 from users where user_id='${user_id}'`);
-    // const recipes_id3 = await DButils.execQuery(`select last3 from users where user_id='${user_id}'`);
-    // recipe_id = [recipes_id1,recipes_id2,recipes_id3]
-    return recipes_id;
+    const recipes_id1 = await DButils.execQuery(`select last1 as recipe_id from users where user_id='${user_id}'`);
+    const recipes_id2 = await DButils.execQuery(`select last2 as recipe_id from users where user_id='${user_id}'`);
+    const recipes_id3 = await DButils.execQuery(`select last3 as recipe_id from users where user_id='${user_id}'`);
+    recipe_id = [recipes_id1,recipes_id2,recipes_id3]
+    console.log(recipe_id);
+    return recipe_id;
 }
 async function getOwnRecipes(user_id){
-    const titles = await DButils.execQuery(`select title from recipes where user_id='${user_id}'`);
-    return titles;
+    const ids = await DButils.execQuery(`select recipe_id from recipes where user_id='${user_id}'`);
+    return ids;
 }
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;

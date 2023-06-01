@@ -8,7 +8,9 @@ const DButils = require("./DButils");
  * @param {*} recipes_info 
  * 
  */
-
+async function markAsviewed(user_id, recipe_id){
+    await DButils.execQuery(`insert into viewedrecipes values ('${user_id}',${recipe_id})`);
+}
 
 async function getRecipeInformation(recipe_id) {
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
@@ -35,18 +37,31 @@ async function getRecipeDetails(recipe_id) {
         
     }
 }
+async function checkViewd(recipe_id,user_id){
+    let viewed = await DButils.execQuery(`SELECT * FROM viewedrecipes where user_id=${user_id} and recipe_id=${recipe_id}`);
+    if(viewed.length == 0){
+        return False;
+    }
+    else{
+        return True;
+    }
+}
 
-async function getRecipesPreview(recipe_ids) {
-    var res = []
-    for (let i = 0; i < recipe_ids.length; i++) {
-        let recipe = await DButils.execQuery(`SELECT recipe_id,image,title,readyInMinutes,popularity,vegetarian,vegan,glutenFree,isClicked,favorite from recipes WHERE recipe_id='${recipe_ids[i]}'`);
-        res.push(recipe)
-      }
-    console.log(res);
-    return res;
+async function checkFavorite(recipe_id,user_id){
+    let viewed = await DButils.execQuery(`SELECT * FROM favoriterecipes where user_id=${user_id} and recipe_id=${recipe_id}`);
+    if(viewed.length == 0){
+        return False;
+    }
+    else{
+        return True;
+    }
+}
+
+async function getRecipesPreview(recipe_id,user_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
-
+    let viewed = checkViewd(recipe_id,user_id);
+    let favorite = checkFavorite(recipe_id,user_id);
     return {
         id: id,
         title: title,
@@ -56,8 +71,19 @@ async function getRecipesPreview(recipe_ids) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        
+        viewed: viewed,
+        favorite: favorite
     }
+}
+
+async function getRecipesPreviewOwn(recipe_ids) {
+    var res = []
+    for (let i = 0; i < recipe_ids.length; i++) {
+        let recipe = await DButils.execQuery(`SELECT recipe_id,image,title,readyInMinutes,popularity,vegetarian,vegan,glutenFree,isClicked,favorite from recipes WHERE recipe_id='${recipe_ids[i]}'`);
+        res.push(recipe)
+      }
+    console.log(res);
+    return res;
 }
 
 async function getRecipeArrayRand(n) {
@@ -126,5 +152,5 @@ exports.getSearchResults = getSearchResults;
 exports.getRecipeDetails = getRecipeDetails;
 exports.getRecipeArrayRand = getRecipeArrayRand;
 exports.getRecipesPreview = getRecipesPreview;
-
-
+exports.getRecipesPreviewOwn = getRecipesPreviewOwn;
+exports.markAsviewed = markAsviewed;

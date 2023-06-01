@@ -101,6 +101,7 @@ router.get("/:recipeId", async (req, res, next) => {
   try {
     const user_id = req.session.user_id;//session is currently an empty object.
     if(user_id != undefined && user_id != null){
+      await recipes_utils.markAsviewed(user_id);
       last1 = req.params.recipeId;
       last2 = (await DButils.execQuery(`select last1 from users where user_id='${user_id}'`))[0]['last1'];
       last3 = (await DButils.execQuery(`select last2 from users where user_id='${user_id}'`))[0]['last2'];

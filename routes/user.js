@@ -46,22 +46,26 @@ router.get('/favorites', async (req,res,next) => {
     const recipes_id = await user_utils.getFavoriteRecipes(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
+    const results = await recipe_utils.getRecipesPreview(recipes_id_array,user_id);
     res.status(200).send(results);
   } catch(error){
     next(error); 
   }
 });
 
-router.get('/last', async (req,res,next) => {//TODO make it work
+router.get('/last', async (req,res,next) => {
   try{
+    console.log("hello");
     const user_id = req.session.user_id;
-    let recent_recipes = {};
     const recipes_id = await user_utils.get3LastViewd(user_id);
     let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipeDetails(recipes_id_array);
-    res.status(200).send(recipes_id);
+    recipes_id.map((element) => recipes_id_array.push(element[0].recipe_id)); //extracting the recipe ids into array
+    console.log(recipes_id_array);
+    let res1 = [];
+    for(let i =0; i<3;i++){
+      res1.push(await recipe_utils.getRecipeDetails(recipes_id_array[i]));
+    }
+    res.status(200).send(res1);
   } catch(error){
     next(error); 
   }
@@ -73,10 +77,12 @@ router.get('/own', async (req,res,next) => {//TODO make it work
     if(user_id != undefined && user_id != null){
     let own_recipes = {};
     const titles = await user_utils.getOwnRecipes(user_id);
-    let recipes_titles_array = [];
-    titles.map((element) => recipes_titles_array.push(element.title)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipeDetails(recipes_id_array);
-    res.status(200).send(titles);
+    console.log(titles);
+    let recipes_id_array = [];
+    titles.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
+    console.log(recipes_id_array);
+    const results = await recipe_utils.getRecipesPreviewOwn(recipes_id_array);
+    res.status(200).send(results);
     }
   } catch(error){
     next(error); 
