@@ -88,8 +88,8 @@ async function getRecipesPreviewHelp(details,user_id=undefined) {
     var viewed;
     var favorite;
     if(user_id != undefined){
-        viewed = await checkViewd(details.recipe_id,user_id);
-        favorite = await checkFavorite(details.recipe_id,user_id);
+        viewed = await checkViewd(details.id,user_id);
+        favorite = await checkFavorite(details.id,user_id);
     }
     else{
         viewed = false;
