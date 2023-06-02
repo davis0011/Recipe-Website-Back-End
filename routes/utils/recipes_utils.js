@@ -87,7 +87,6 @@ async function getRecipesPreview(recipe_id,user_id=undefined) {
 async function getRecipesPreviewHelp(details,user_id=undefined) {
     var viewed;
     var favorite;
-    console.log(details[Promise]);
     if(user_id != undefined){
         viewed = await checkViewd(details.recipe_id,user_id);
         favorite = await checkFavorite(details.recipe_id,user_id);
@@ -97,7 +96,6 @@ async function getRecipesPreviewHelp(details,user_id=undefined) {
         favorite = false;
     }
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = details;
-
     return {
         id: id,
         title: title,
@@ -123,24 +121,35 @@ async function getRecipesPreviewOwn(recipe_ids) {
     return res;
 }
 
-async function getRecipeArrayRand(n) {
-    let set = new Set();
-    console.log(n)
-    while (set.size < n) {
-        set = set.add(Math.floor(Math.random() * (100000)) + 1);
-    }
-    let result = Array.from(set);
-    for (let i = 0; i < result.length; i++) {
-        try{
-            result[i] = await getRecipesPreview(result[i]);
+async function getRecipeArrayRand(n,user_id) {
+    var results = await axios.get(`${api_domain}/random`, {
+        params: {
+            includeNutrition: false,
+            apiKey: process.env.spooncular_apiKey,
+            number: n
         }
-        catch{
-            result[i] = Math.floor(Math.random() * (100000)) + 1;
-            i--;
-        }
+    });
+    results = results.data["recipes"]
+    for (let i = 0; i < results.length; i++) {
+        let curr = results[i];
+        results[i] = await getRecipesPreviewHelp(
+            {
+                id:curr.id, 
+                title:curr.title, 
+                readyInMinutes:curr.readyInMinutes, 
+                image:curr.image, 
+                aggregateLikes:curr.aggregateLikes, 
+                vegan:curr.vegan, 
+                vegetarian:curr.vegetarian, 
+                glutenFree:curr.glutenFree 
+            },
+            user_id
+        )   
+
       }
-    return Promise.all(result);
+    return results;
 }
+    
 
 async function getSearchResults(params_data,user_id){
     params_data.cuisines = params_data.cuisines.join(",");

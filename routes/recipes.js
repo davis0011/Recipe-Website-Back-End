@@ -19,11 +19,11 @@ router.get("/rand", async (req, res, next) => {
     // if (req.params.n > 5 || req.params.n < 1){
     //   throw new Error('Bad request, /rand accepts arrguments between 1 and 5.')
     // }
-    const recipeArray = await recipes_utils.getRecipeArrayRand(3);
+    const responses = await recipes_utils.getRecipeArrayRand(3,req.session.user_id);
     // if (recipeArray.some(element => element === null || typeof element === 'number' && Number.isInteger(element))){
     //   throw new Error('Server could not fill the requested list with recipies.')
     // }
-    res.send(recipeArray);
+    res.send(responses);
   } catch (error) {
     next(error);
   }
