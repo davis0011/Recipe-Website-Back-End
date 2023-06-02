@@ -69,7 +69,7 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
       diets: req.header('diets') !== "" ? req.header('diets').split(',') : [],
       intolerances: req.header('intolerances') !== "" ? req.header('intolerances').split(',') : []
     };
-    
+    user_id = req.session.user_id;
     
 
     // input validation on the filters
@@ -80,8 +80,8 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
     const ValidIntolerances = params.intolerances.every((intolerance) => options.intolerance.includes(intolerance));
     
     if (ValidCuisines && ValidDiets && ValidIntolerances && ValidNumber && ValidText){
-      const results = await recipes_utils.getSearchResults(params);
-      console.log(results)
+      const results = await recipes_utils.getSearchResults(params,user_id);
+      console.log(results);
       res.send({results: results});
     }
     else {

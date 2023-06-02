@@ -40,28 +40,36 @@ async function getRecipeDetails(recipe_id) {
 async function checkViewd(recipe_id,user_id){
     let viewed = await DButils.execQuery(`SELECT * FROM viewedrecipes where user_id=${user_id} and recipe_id=${recipe_id}`);
     if(viewed.length == 0){
-        return False;
+        return false;
     }
     else{
-        return True;
+        return true;
     }
 }
 
 async function checkFavorite(recipe_id,user_id){
     let viewed = await DButils.execQuery(`SELECT * FROM favoriterecipes where user_id=${user_id} and recipe_id=${recipe_id}`);
     if(viewed.length == 0){
-        return False;
+        return false;
     }
     else{
-        return True;
+        return true;
     }
 }
 
-async function getRecipesPreview(recipe_id,user_id) {
+async function getRecipesPreview(recipe_id,user_id=undefined) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
-    let viewed = checkViewd(recipe_id,user_id);
-    let favorite = checkFavorite(recipe_id,user_id);
+    var viewed;
+    var favorite;
+    if(user_id != undefined){
+        viewed = await checkViewd(recipe_id,user_id);
+        favorite = await checkFavorite(recipe_id,user_id);
+    }
+    else{
+        viewed = false;
+        favorite = false;
+    }
     return {
         id: id,
         title: title,
@@ -75,6 +83,35 @@ async function getRecipesPreview(recipe_id,user_id) {
         favorite: favorite
     }
 }
+
+async function getRecipesPreviewHelp(details,user_id=undefined) {
+    var viewed;
+    var favorite;
+    console.log(details[Promise]);
+    if(user_id != undefined){
+        viewed = await checkViewd(details.recipe_id,user_id);
+        favorite = await checkFavorite(details.recipe_id,user_id);
+    }
+    else{
+        viewed = false;
+        favorite = false;
+    }
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = details;
+
+    return {
+        id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        viewed: viewed,
+        favorite: favorite
+    }
+}
+
 
 async function getRecipesPreviewOwn(recipe_ids) {
     var res = []
@@ -95,7 +132,7 @@ async function getRecipeArrayRand(n) {
     let result = Array.from(set);
     for (let i = 0; i < result.length; i++) {
         try{
-            result[i] = await getRecipeDetails(result[i]);
+            result[i] = await getRecipesPreview(result[i]);
         }
         catch{
             result[i] = Math.floor(Math.random() * (100000)) + 1;
@@ -105,11 +142,10 @@ async function getRecipeArrayRand(n) {
     return Promise.all(result);
 }
 
-async function getSearchResults(params_data){
+async function getSearchResults(params_data,user_id){
     params_data.cuisines = params_data.cuisines.join(",");
     params_data.diets = params_data.diets.join(",");
     params_data.intolerances = params_data.intolerances.join(",");
- 
     // let headers = "?query="+params_data.query+"&number="+params_data.number;
     // let c = params_data.cuisines !== "" ? "&cuisines="+params_data.cuisines : ""
     // let d = params_data.diets !== "" ? "&diets="+params_data.diets : ""
@@ -132,16 +168,17 @@ async function getSearchResults(params_data){
     results = response.data["results"]
     for (let i = 0; i < results.length; i++) {
         let curr = results[i];
-        results[i] = {
-            id:curr.id, 
-            title:curr.title, 
-            readyInMinutes:curr.readyInMinutes, 
-            image:curr.image, 
-            aggregateLikes:curr.aggregateLikes, 
-            vegan:curr.vegan, 
-            vegetarian:curr.vegetarian, 
-            glutenFree:curr.glutenFree 
-        };
+        results[i] = await getRecipesPreviewHelp(curr,user_id);
+        // {
+        //     id:curr.id, 
+        //     title:curr.title, 
+        //     readyInMinutes:curr.readyInMinutes, 
+        //     image:curr.image, 
+        //     aggregateLikes:curr.aggregateLikes, 
+        //     vegan:curr.vegan, 
+        //     vegetarian:curr.vegetarian, 
+        //     glutenFree:curr.glutenFree 
+        // };
       }
     return results;
 

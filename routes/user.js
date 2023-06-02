@@ -63,7 +63,10 @@ router.get('/last', async (req,res,next) => {
     console.log(recipes_id_array);
     let res1 = [];
     for(let i =0; i<3;i++){
-      res1.push(await recipe_utils.getRecipeDetails(recipes_id_array[i]));
+      if(recipes_id_array[i]==0){
+        continue
+      }
+      res1.push(await recipe_utils.getRecipesPreview(recipes_id_array[i],user_id));
     }
     res.status(200).send(res1);
   } catch(error){
