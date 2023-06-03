@@ -99,8 +99,10 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
  */
 router.get("/:recipeId", async (req, res, next) => {
   try {
+    var id = false;
     const user_id = req.session.user_id;//session is currently an empty object.
     if(user_id != undefined && user_id != null){
+      id = true;
       await recipes_utils.markAsviewed(user_id);
       last1 = req.params.recipeId;
       last2 = (await DButils.execQuery(`select last1 from users where user_id='${user_id}'`))[0]['last1'];
@@ -118,8 +120,19 @@ router.get("/:recipeId", async (req, res, next) => {
       }
     }
     const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
+    if(id){
+      recipe.viewed = await recipes_utils.checkViewd(req.params.recipeId,user_id);
+    }
+    else{
+      recipe.viewed = false;
+    }
+    if(id){
+      recipe.favorite = await recipes_utils.checkFavorite(req.params.recipeId,user_id);
+    }
+    else{
+      recipe.favorite = false;
+    }
     res.send(recipe);
-    // res.send({user: user_id});
   } catch (error) {
     next(error);
   }

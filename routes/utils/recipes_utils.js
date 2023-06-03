@@ -23,7 +23,7 @@ async function getRecipeInformation(recipe_id) {
 
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,servings,extendedIngredients,instructions } = recipe_info.data;
 
     return {
         id: id,
@@ -34,7 +34,9 @@ async function getRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        
+        servings: servings,
+        extendedIngredients: extendedIngredients,
+        instructions: instructions,
     }
 }
 async function checkViewd(recipe_id,user_id){
@@ -213,5 +215,7 @@ exports.getRecipesPreview = getRecipesPreview;
 exports.getRecipesPreviewOwn = getRecipesPreviewOwn;
 exports.markAsviewed = markAsviewed;
 exports.getRecipesPreviewFamily = getRecipesPreviewFamily;
+exports.checkViewd = checkViewd;
+exports.checkFavorite = checkFavorite;
 
 
