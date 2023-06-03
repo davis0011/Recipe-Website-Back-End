@@ -224,6 +224,24 @@ paths:
                   $ref: '#/components/schemas/RecipePreview'
         '400':
           description: user not found
+  /users/family:
+    get:
+      tags: 
+      - users
+      summary: get user's family created recipes
+      description: get the recipes that the user's family own
+      operationId: family
+      responses:
+        '200':
+          description: successfully showed the family recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamilyRecipe'
+        '400':
+          description: user not found
   /recipes/searchRecipe:
     get:
       tags:
@@ -328,6 +346,7 @@ paths:
           description: Success
         '400':
           description: Bad Request
+  
 components:
   schemas:
     User:
@@ -450,4 +469,25 @@ components:
             description: 
               type: string
               description: the recipe itself
-  
+    FamilyRecipe:
+        type: object
+        properties:
+          user_id:
+            type: integer
+          image:
+            type: string
+          title:
+            type: string
+          origin:
+            type: string
+          occasion:
+            type: string
+          ingredients:
+            type: array
+            items:
+              type: string
+              format: binary
+          instructions:
+            type: string
+          readyInMinutes:
+            type: integer

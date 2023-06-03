@@ -91,6 +91,22 @@ router.get('/own', async (req,res,next) => {//TODO make it work
     next(error); 
   }
 });
+router.get('/family', async (req,res,next) => {//TODO make it work
+  try{
+    const user_id = req.session.user_id;
+    if(user_id != undefined && user_id != null){
+    const ids = await user_utils.getfamilyRecipes(user_id);
+    console.log(ids);
+    let recipes_id_array = [];
+    ids.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
+    console.log(recipes_id_array);
+    const results = await recipe_utils.getRecipesPreviewFamily(recipes_id_array);
+    res.status(200).send(results);
+    }
+  } catch(error){
+    next(error); 
+  }
+});
 router.post("/createRecipe", async (req, res, next) => {//TODO Make it create recipe
   try {
     const user_id = req.session.user_id;//session is currently an empty object.

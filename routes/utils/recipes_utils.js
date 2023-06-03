@@ -121,6 +121,18 @@ async function getRecipesPreviewOwn(recipe_ids) {
     return res;
 }
 
+
+async function getRecipesPreviewFamily(recipe_ids) {
+    var res = []
+    for (let i = 0; i < recipe_ids.length; i++) {
+        let recipe = await DButils.execQuery(`SELECT user_id,image,title,origin,occasion,ingredients,instructions,readyInMinutes from familyrecipes WHERE recipe_id='${recipe_ids[i]}'`);
+        res.push(recipe)
+      }
+    console.log(res);
+    return res;
+}
+
+
 async function getRecipeArrayRand(n,user_id) {
     var results = await axios.get(`${api_domain}/random`, {
         params: {
@@ -200,3 +212,6 @@ exports.getRecipeArrayRand = getRecipeArrayRand;
 exports.getRecipesPreview = getRecipesPreview;
 exports.getRecipesPreviewOwn = getRecipesPreviewOwn;
 exports.markAsviewed = markAsviewed;
+exports.getRecipesPreviewFamily = getRecipesPreviewFamily;
+
+
