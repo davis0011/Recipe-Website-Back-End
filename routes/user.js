@@ -51,8 +51,13 @@ router.get('/favorites', async (req,res,next) => {
     const recipes_id = await user_utils.getFavoriteRecipes(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array,user_id);
-    res.status(200).send(results);
+    let res1 = [];
+    console.log(recipes_id_array)
+    for(let i =0; i<recipes_id_array.length;i++){
+      console.log(recipes_id_array[i]);
+      res1.push(await recipe_utils.getRecipesPreview(recipes_id_array[i],user_id));
+    }
+    res.status(200).send(res1);
   } catch(error){
     next(error); 
   }

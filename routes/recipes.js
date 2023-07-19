@@ -82,7 +82,7 @@ router.get("/searchRecipe", async (req, res, next) => {//TODO work here
     if (ValidCuisines && ValidDiets && ValidIntolerances && ValidNumber && ValidText){
       const results = await recipes_utils.getSearchResults(params,user_id);
       console.log(results);
-      res.send({results: results});
+      res.send(results);
     }
     else {
       throw Error("Invalid Request.")
