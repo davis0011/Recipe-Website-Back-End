@@ -118,9 +118,10 @@ async function getRecipesPreviewHelp(details,user_id=undefined) {
 async function getRecipesPreviewOwn(recipe_ids) {
     var res = []
     for (let i = 0; i < recipe_ids.length; i++) {
-        let recipe = await DButils.execQuery(`SELECT recipe_id,image,title,readyInMinutes,popularity,vegetarian,vegan,glutenFree,isClicked,favorite from recipes WHERE recipe_id='${recipe_ids[i]}'`);
+        let recipe = await DButils.execQuery(`SELECT recipe_id,image,title,readyInMinutes,servings,popularity,vegetarian,vegan,glutenFree,isClicked,favorite,ingredients,instructions from recipes WHERE recipe_id='${recipe_ids[i]}'`);
         res.push(recipe)
       }
+    console.log("res:")
     console.log(res);
     return res;
 }

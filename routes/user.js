@@ -95,7 +95,10 @@ router.get('/own', async (req,res,next) => {//TODO make it work
     titles.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
     console.log(recipes_id_array);
     const results = await recipe_utils.getRecipesPreviewOwn(recipes_id_array);
-    res.status(200).send(results);
+    console.log(results)
+    res1 =[]
+    results.map((elemnt) => res1.push(elemnt[0]))
+    res.status(200).send(res1);
     }
   } catch(error){
     next(error); 
