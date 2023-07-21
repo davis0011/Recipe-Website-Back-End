@@ -130,8 +130,8 @@ async function getRecipesPreviewOwn(recipe_ids) {
 async function getRecipesPreviewFamily(recipe_ids) {
     var res = []
     for (let i = 0; i < recipe_ids.length; i++) {
-        let recipe = await DButils.execQuery(`SELECT user_id,image,title,origin,occasion,ingredients,instructions,readyInMinutes from familyrecipes WHERE recipe_id='${recipe_ids[i]}'`);
-        res.push(recipe)
+        let recipe = await DButils.execQuery(`SELECT recipe_id,user_id,image,title,origin,occasion,ingredients,instructions,readyInMinutes from familyrecipes WHERE recipe_id='${recipe_ids[i]}'`);
+        res.push(recipe[0])
       }
     console.log(res);
     return res;

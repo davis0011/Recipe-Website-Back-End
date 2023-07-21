@@ -114,6 +114,7 @@ router.get('/family', async (req,res,next) => {//TODO make it work
     ids.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
     console.log(recipes_id_array);
     const results = await recipe_utils.getRecipesPreviewFamily(recipes_id_array);
+    console.log(results);
     if(results.length !=0){
       res.status(200).send(results);
     }
